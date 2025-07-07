@@ -6,6 +6,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -24,11 +25,9 @@ app.use((req, res, next) => {
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
-
       if (logLine.length > 80) {
         logLine = logLine.slice(0, 79) + "…";
       }
-
       log(logLine);
     }
   });
@@ -52,9 +51,9 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-
-  const port = 8081;
-  server.listen(port, "127.0.0.1", () => {
-    log(`serving on http://localhost:${port}`);
+  // ✅ Use Azure port and host config
+  const port = process.env.PORT || 8081;
+  server.listen(port, () => {
+    log(`Serving on http://localhost:${port}`);
   });
 })();
